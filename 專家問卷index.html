@@ -1,0 +1,628 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>麻醉護理衛教系統 — 專家內容效度評鑑問卷</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans TC", sans-serif;
+    background: #f5f4ef;
+    color: #1a1a18;
+    font-size: 15px;
+    line-height: 1.6;
+  }
+
+  .page { max-width: 780px; margin: 0 auto; padding: 2rem 1.25rem 4rem; }
+
+  /* ── 頁首 ── */
+  .hdr {
+    background: #fff;
+    border: 0.5px solid rgba(0,0,0,0.1);
+    border-radius: 12px;
+    padding: 1.5rem 1.75rem;
+    margin-bottom: 1.5rem;
+  }
+  .hdr h1 { font-size: 19px; font-weight: 600; color: #1a1a18; margin-bottom: 6px; }
+  .hdr p { font-size: 13px; color: #666; line-height: 1.7; }
+  .hdr .tag {
+    display: inline-block;
+    background: #E1F5EE;
+    color: #0F6E56;
+    font-size: 11px;
+    font-weight: 600;
+    padding: 2px 9px;
+    border-radius: 999px;
+    margin-bottom: 10px;
+    letter-spacing: 0.03em;
+  }
+
+  /* ── 說明文字 ── */
+  .intro-box {
+    background: #fff;
+    border: 0.5px solid rgba(0,0,0,0.1);
+    border-radius: 12px;
+    padding: 1.25rem 1.5rem;
+    margin-bottom: 1.5rem;
+    font-size: 13px;
+    color: #444;
+    line-height: 1.85;
+  }
+  .intro-box h3 { font-size: 13px; font-weight: 700; color: #1a1a18; margin-bottom: 8px; }
+
+  /* ── 評分說明 ── */
+  .legend {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+    gap: 8px;
+    margin-bottom: 1.5rem;
+  }
+  .leg {
+    background: #fff;
+    border: 0.5px solid rgba(0,0,0,0.1);
+    border-radius: 8px;
+    padding: 10px 12px;
+    font-size: 12px;
+    color: #555;
+    line-height: 1.5;
+  }
+  .leg b { display: block; font-size: 15px; font-weight: 700; margin-bottom: 2px; }
+  .leg.s4 b { color: #27500A; }
+  .leg.s3 b { color: #0C447C; }
+  .leg.s2 b { color: #633806; }
+  .leg.s1 b { color: #791F1F; }
+
+  /* ── 進度條 ── */
+  .prog-wrap { background: #e0ded8; border-radius: 999px; height: 6px; margin-bottom: 6px; overflow: hidden; }
+  .prog-bar { height: 6px; background: #1D9E75; border-radius: 999px; transition: width .4s ease; width: 0%; }
+  .prog-lbl { font-size: 12px; color: #888; margin-bottom: 1.5rem; }
+
+  /* ── 專家選擇 ── */
+  .expert-box {
+    background: #fff;
+    border: 0.5px solid rgba(0,0,0,0.1);
+    border-radius: 12px;
+    padding: 1rem 1.25rem;
+    margin-bottom: 1.5rem;
+  }
+  .expert-box label { font-size: 13px; font-weight: 600; color: #333; display: block; margin-bottom: 6px; }
+  .expert-box select {
+    width: 100%; padding: 9px 12px; font-size: 14px;
+    border: 1px solid #d0cec8; border-radius: 8px;
+    background: #fafaf8; color: #1a1a18; cursor: pointer;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23888' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+  }
+
+  /* ── 類別標題 ── */
+  .cat-header {
+    font-size: 12px;
+    font-weight: 700;
+    color: #888;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    padding: 6px 2px;
+    margin-top: 1.75rem;
+    margin-bottom: 8px;
+    border-bottom: 0.5px solid rgba(0,0,0,0.1);
+  }
+  .cat-header:first-of-type { margin-top: 0; }
+
+  /* ── 題目卡片 ── */
+  .card {
+    background: #fff;
+    border: 0.5px solid rgba(0,0,0,0.1);
+    border-radius: 12px;
+    padding: 1.125rem 1.375rem;
+    margin-bottom: 1rem;
+    transition: border-color .2s, box-shadow .2s;
+  }
+  .card.scored { border-color: rgba(0,0,0,0.18); }
+  .card.flagged { border-left: 3px solid #D85A30; }
+  .card.soft-flag { border-left: 3px solid #3B82F6; }
+  .card.err {
+    border: 1.5px solid #E24B4A !important;
+    background: #fff9f9;
+  }
+  .cnum {
+    font-size: 11px; font-weight: 600; color: #aaa;
+    letter-spacing: .06em; text-transform: uppercase;
+    margin-bottom: 6px; display: flex; align-items: center; gap: 7px;
+  }
+  .req-badge {
+    font-size: 10px; background: #FCEBEB; color: #A32D2D;
+    padding: 1px 6px; border-radius: 999px;
+    font-weight: 600; letter-spacing: 0;
+  }
+  .cat-badge {
+    font-size: 10px; background: #EEF3FF; color: #3B5FC0;
+    padding: 1px 7px; border-radius: 999px;
+    font-weight: 600; letter-spacing: 0;
+  }
+  .cq {
+    font-size: 14px; font-weight: 600; color: #1a1a18;
+    margin-bottom: 7px; line-height: 1.5;
+    display: flex; align-items: flex-start; gap: 6px;
+  }
+  .cq-icon { color: #aaa; flex-shrink: 0; margin-top: 1px; font-size: 15px; }
+  .ca {
+    font-size: 13px; color: #666; line-height: 1.7;
+    margin-bottom: 12px; padding: 10px 13px;
+    background: #fafaf8; border-radius: 8px;
+    border-left: 2.5px solid #d0cec8;
+  }
+
+  /* ── 評分按鈕 ── */
+  .rbts { display: flex; gap: 6px; }
+  .rb {
+    flex: 1; padding: 8px 4px; font-size: 13px; font-weight: 600;
+    border: 1px solid #d0cec8; border-radius: 8px;
+    background: #fafaf8; color: #888;
+    cursor: pointer; transition: all .15s; text-align: center;
+    line-height: 1.3;
+  }
+  .rb:hover { border-color: #aaa; color: #333; background: #f0efe9; }
+  .rb.a4 { background: #EAF3DE; border-color: #3B6D11; color: #27500A; }
+  .rb.a3 { background: #E6F1FB; border-color: #185FA5; color: #0C447C; }
+  .rb.a2 { background: #FAEEDA; border-color: #854F0B; color: #633806; }
+  .rb.a1 { background: #FCEBEB; border-color: #A32D2D; color: #791F1F; }
+  .rb .sc { font-size: 15px; display: block; }
+  .rb .sl { font-size: 10px; display: block; margin-top: 1px; opacity: .75; }
+
+  /* ── 錯誤提示 ── */
+  .err-msg {
+    font-size: 12px; color: #A32D2D; margin-top: 7px; display: none;
+    align-items: center; gap: 4px;
+  }
+  .err-msg.on { display: flex; }
+
+  /* ── 原因選單 ── */
+  .rbox { display: none; margin-top: 10px; }
+  .rbox.on { display: block; }
+  .rlbl { font-size: 12px; color: #888; margin-bottom: 5px; }
+  .suggest-lbl { font-size: 12px; color: #888; margin-top: 8px; margin-bottom: 5px; display: none; }
+  .rtag {
+    display: inline-flex; align-items: center; gap: 5px;
+    font-size: 11px; padding: 3px 8px; border-radius: 999px;
+    margin: 2px 3px 2px 0;
+    background: #FAEEDA; color: #633806;
+    border: 0.5px solid #EF9F27;
+  }
+  .rtag-x { cursor: pointer; opacity: .7; font-size: 13px; line-height: 1; }
+  .rtag-x:hover { opacity: 1; }
+  select.rsel {
+    width: 100%; padding: 8px 12px; font-size: 13px;
+    border: 1px solid #d0cec8; border-radius: 8px;
+    background: #fafaf8; color: #1a1a18; cursor: pointer;
+    margin-top: 6px;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23888' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+  }
+  textarea.cmt {
+    width: 100%; margin-top: 8px; padding: 8px 12px; font-size: 13px;
+    border: 1px solid #d0cec8; border-radius: 8px;
+    background: #fafaf8; color: #1a1a18;
+    resize: vertical; min-height: 54px;
+    font-family: inherit;
+  }
+  textarea.cmt:focus, select.rsel:focus { outline: none; border-color: #1D9E75; box-shadow: 0 0 0 3px rgba(29,158,117,.12); }
+
+  /* ── 統計區 ── */
+  .sumwrap {
+    margin-top: 2rem; padding-top: 1.5rem;
+    border-top: 0.5px solid rgba(0,0,0,0.1);
+  }
+  .sumgrid {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+    gap: 10px; margin-bottom: 1.25rem;
+  }
+  .sc {
+    background: #fff; border: 0.5px solid rgba(0,0,0,0.1);
+    border-radius: 10px; padding: 12px; text-align: center;
+  }
+  .sc-n { font-size: 24px; font-weight: 700; color: #1a1a18; }
+  .sc-l { font-size: 12px; color: #888; margin-top: 3px; }
+
+  /* ── 驗證橫幅 ── */
+  .val-banner {
+    display: none; background: #fff5f5;
+    border: 1px solid #F09595; border-radius: 8px;
+    padding: 10px 14px; margin-bottom: 1rem;
+    font-size: 13px; color: #A32D2D; line-height: 1.6;
+  }
+  .val-banner.on { display: block; }
+
+  /* ── 提交按鈕 ── */
+  .submit-btn {
+    width: 100%; padding: 14px; font-size: 15px; font-weight: 600;
+    border: none; border-radius: 10px;
+    background: #1D9E75; color: #fff;
+    cursor: pointer; transition: background .15s;
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+  }
+  .submit-btn:hover { background: #0F6E56; }
+  .submit-btn:disabled { background: #ccc; cursor: not-allowed; }
+
+  /* ── Toast 通知 ── */
+  .toast {
+    position: fixed; bottom: 28px; left: 50%;
+    transform: translateX(-50%);
+    padding: 11px 22px; border-radius: 10px;
+    font-size: 14px; font-weight: 500;
+    opacity: 0; transition: opacity .3s;
+    pointer-events: none; z-index: 9999;
+    white-space: nowrap;
+  }
+  .toast.ok { background: #085041; color: #9FE1CB; }
+  .toast.ng { background: #791F1F; color: #F5C4B3; }
+  .toast.show { opacity: 1; }
+
+  /* ── 成功畫面 ── */
+  .success-screen {
+    display: none; text-align: center;
+    background: #fff; border: 0.5px solid rgba(0,0,0,0.1);
+    border-radius: 12px; padding: 3rem 2rem;
+    margin-top: 2rem;
+  }
+  .success-screen.on { display: block; }
+  .success-icon { font-size: 48px; margin-bottom: 1rem; }
+  .success-screen h2 { font-size: 20px; font-weight: 600; color: #1a1a18; margin-bottom: 8px; }
+  .success-screen p { font-size: 14px; color: #666; }
+
+  @media (max-width: 600px) {
+    .rb .sl { display: none; }
+    .rb { padding: 9px 2px; font-size: 14px; }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <!-- 頁首 -->
+  <div class="hdr">
+    <div class="tag">專家內容效度評鑑</div>
+    <h1>麻醉護理衛教系統 — 專家內容效度評鑑問卷</h1>
+    <p>
+      研究題目：智慧型互動式麻醉護理衛教系統之開發與可用性評估<br>
+      亞洲大學健康管理研究所　研究生：黃思瑜　指導教授：李麗君　聯絡信箱：siyu04154@gmail.com　電話：0935-438-933
+    </p>
+  </div>
+
+  <!-- 說明文字 -->
+  <div class="intro-box">
+    <h3>敬愛的專家 您好：</h3>
+    本研究建置一套「麻醉衛教小幫手 AI 系統」，結合 Prompt Engineering 技術、Google Gemini AI 與檢索增強生成（RAG）資料庫搜尋機制，針對病人提出之麻醉相關問題，提供即時且標準化之衛教回應。<br><br>
+    以下內容為病人真實性提問，為確保 AI 回應內容之<strong>醫療正確性、臨床適切性、安全性與病人理解性</strong>，懇請您依據麻醉專業經驗，針對 AI 回應內容進行專家內容效度評估，作為後續系統修正與優化之依據。<br><br>
+    誠摯感謝您於百忙之中撥冗協助，謹致最誠摯的感謝與敬意。
+  </div>
+
+  <!-- 評分說明 -->
+  <div class="legend">
+    <div class="leg s4"><b>4 分</b>非常適切：AI 回應具備良好，無需修正</div>
+    <div class="leg s3"><b>3 分</b>適切但需小幅修正：AI 回應大致適當，但部分內容仍需小幅修正</div>
+    <div class="leg s2"><b>2 分</b>不適切：AI 回應於多項面向存在明顯缺失，需大幅修正</div>
+    <div class="leg s1"><b>1 分</b>極不適切：AI 回應存在醫療錯誤，不建議使用</div>
+  </div>
+
+  <!-- 專家選擇 -->
+  <div class="expert-box">
+    <label>請選擇您的專家身份（必填）</label>
+    <select id="expert-id">
+      <option value="">— 請選擇 —</option>
+      <option value="麻醉科醫師">麻醉科醫師</option>
+      <option value="資深麻醉專科護理師">資深麻醉專科護理師</option>
+      <option value="教師">教師</option>
+    </select>
+  </div>
+
+  <!-- 進度條 -->
+  <div class="prog-wrap"><div class="prog-bar" id="pgb"></div></div>
+  <div class="prog-lbl" id="pgl">已完成 0 / 56 題（每題均為必填）</div>
+
+  <!-- 驗證橫幅（頂部） -->
+  <div class="val-banner" id="val-top"></div>
+
+  <!-- 題目區 -->
+  <div id="qlist"></div>
+
+  <!-- 統計與提交 -->
+  <div class="sumwrap">
+    <div class="sumgrid">
+      <div class="sc"><div class="sc-n" id="st">0</div><div class="sc-l">已評題數</div></div>
+      <div class="sc"><div class="sc-n" id="scvi">—</div><div class="sc-l">I-CVI</div></div>
+      <div class="sc"><div class="sc-n" id="savg">—</div><div class="sc-l">平均分數</div></div>
+      <div class="sc"><div class="sc-n" id="slow">0</div><div class="sc-l">需修正（≤2分）</div></div>
+    </div>
+    <div class="val-banner" id="val-bot"></div>
+    <button class="submit-btn" id="submit-btn" onclick="submitAll()">
+      &#10003;　提交評鑑結果至 Google Sheets
+    </button>
+  </div>
+
+  <!-- 成功畫面 -->
+  <div class="success-screen" id="success-screen">
+    <div class="success-icon">&#10003;</div>
+    <h2>評鑑結果已成功提交！</h2>
+    <p>感謝您撥冗填寫本問卷，您的寶貴意見將有助於提升麻醉護理衛教系統的品質。<br>資料已自動儲存至研究資料庫，您可以關閉此頁面。</p>
+  </div>
+
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const API_URL = "https://script.google.com/macros/s/AKfycbzajhM-kOyHjkKUOXQbR8SBuDLVHzLIs_u1VT-NTG8pZWp3zJA2hCI6KQ7bnjYrv7QgTw/exec";
+
+const QA = [
+  // ── 類別一：麻醉類型與適應症 ──
+  {cat:"麻醉類型與適應症", q:"開腰椎手術是什麼麻醉?", a:"您好！針對「開腰椎手術」，通常會採用「全身麻醉」。全身麻醉能讓您在手術過程中完全無意識、無痛覺，且肌肉會完全放鬆，這對外科醫師進行精細的腰椎手術非常重要。有時候，麻醉醫師也會考慮結合「區域麻醉」（例如硬膜外麻醉）來做術後的止痛。麻醉醫師會根據您的身體狀況、手術的複雜程度以及外科醫師的需求，來為您選擇最適合的麻醉方式。若有個別病況，請與您的麻醉醫師討論。"},
+  {cat:"麻醉類型與適應症", q:"我如果開腹腔鏡肌瘤切除是什麼麻醉?", a:"您好！針對腹腔鏡肌瘤切除手術，通常會採用全身麻醉。全身麻醉能確保您在手術中完全無意識、無痛感，也能讓肌肉放鬆，方便外科醫師進行腹腔鏡操作。麻醉醫師會根據您的身體狀況和手術細節，為您規劃最安全的麻醉方式。這是一般資訊，以您的醫療團隊說明為準。若有個別病況，請與您的麻醉醫師討論。"},
+  {cat:"麻醉類型與適應症", q:"如果我要開膽結石手術，該使用什麼麻醉要注意什麼？", a:"您好，膽結石手術通常會採用全身麻醉，讓您在手術過程中完全睡著，不會感受到疼痛。在麻醉前，最重要的是要禁食，避免嘔吐及吸入性肺炎。一般固體食物需禁食6-8小時，清流質2小時。麻醉醫師也會評估您的身體狀況，如心臟功能、ASA分級等，確保麻醉安全。麻醉醫師會全程在旁給藥、監測生命徵象並維持您的安全，請您放心。若有個別病況，請與您的麻醉醫師討論。"},
+  {cat:"麻醉類型與適應症", q:"半身與全身麻醉有什麼不同？", a:"您好！全身麻醉是利用藥物讓您進入無意識、無痛覺、肌肉放鬆的狀態，整個手術過程您不會有任何記憶或感覺。半身麻醉通常指的是區域麻醉，例如脊椎麻醉或硬膜外麻醉，是將藥物注射到特定神經區域，讓特定部位（例如下半身）失去感覺，但您會保持清醒，或在輕度鎮靜下放鬆。簡單來說，主要差別在於全身麻醉會讓您睡著，而半身麻醉是讓您清醒但特定部位沒有感覺。若有個別病況，請與您的麻醉醫師討論。"},
+  {cat:"麻醉類型與適應症", q:"我開手為什麼不能半身麻醉?", a:"您好！半身麻醉（例如脊椎麻醉或硬膜外麻醉）主要是將麻醉藥注入脊髓液或硬膜外腔，使下半身失去感覺。由於您的手術部位在手部（屬於上半身），半身麻醉無法達到手部的止痛效果。因此，手部手術通常會考慮全身麻醉（讓您完全睡著），或是針對手臂的區域神經阻斷術（只讓整隻手臂或手掌失去感覺，您保持清醒）。麻醉醫師會根據您的手術需求和身體狀況，為您選擇最安全有效的麻醉方式。若有個別病況，請與您的麻醉醫師討論。"},
+  // ── 類別二：術前準備與禁食 ──
+  {cat:"術前準備與禁食", q:"我肚子餓怎麼辦?", a:"親愛的，我知道您現在可能感到飢餓，這是為了您的安全，在麻醉前禁食是很重要的。主要目的是為了避免手術中或術後發生嘔吐，進而造成吸入性肺炎的風險。請您再忍耐一下，麻醉醫師和護理師會全程照護您的。若有個別病況，請與您的麻醉醫師討論。"},
+  {cat:"術前準備與禁食", q:"要禁食多久？吃檳榔不要吞可以嗎？", a:"您好，禁食時間是這樣的：一般固體食物通常需要禁食6-8小時，清流質則需禁食2小時。至於檳榔，為了您的安全，建議麻醉前完全不要吃或嚼任何東西，包括檳榔。即使不吞，口中的分泌物或殘渣仍可能造成風險。若有個別病況，請與您的麻醉醫師討論。"},
+  {cat:"術前準備與禁食", q:"為什麼一定要禁食？", a:"您好！麻醉前禁食的主要原因是為了「避免嘔吐及吸入性肺炎」。全身麻醉會讓您的意識和肌肉都放鬆，包括腸胃道的肌肉。如果胃裡有食物或水，在麻醉過程中可能會發生嘔吐，嘔吐物就可能不小心跑到肺部，造成嚴重的「吸入性肺炎」。所以，禁食是為了保護您的呼吸道，確保麻醉過程的安全性。請您務必遵守麻醉醫師指示的禁食時間。若有個別病況，請與您的麻醉醫師討論。"},
+  {cat:"術前準備與禁食", q:"麻醉前為什麼不能抽煙？又不是食物?", a:"您好！雖然抽菸不是食物，但它會對您的呼吸系統造成影響：抽菸會刺激氣管和肺部，增加痰液分泌，容易造成術後咳嗽或呼吸道痙攣；同時抽菸會讓肺功能下降，影響身體對氧氣的利用，增加麻醉中的風險。所以，麻醉前禁菸是為了讓您的呼吸道更健康，減少麻醉和手術中的呼吸道併發症，讓您能更安全地接受手術。若有個別病況，請與您的麻醉醫師討論。"},
+  {cat:"術前準備與禁食", q:"為什麼不能吃口香糖？", a:"您好！雖然口香糖不是食物，但嚼口香糖會刺激唾液和胃酸分泌，增加胃裡的液體量，麻醉時若不小心嘔吐，就可能增加「吸入性肺炎」的風險，這和禁食的原理是相同的。所以，為了您的安全，麻醉前請避免吃口香糖。若有個別病況，請與您的麻醉醫師討論。"},
+  {cat:"術前準備與禁食", q:"麻醉前可以吃藥嗎？", a:"您好！您平常服用的藥物，例如降血壓藥、糖尿病藥或抗凝血藥等，是否需要繼續服用或暫停，都必須由您的麻醉醫師或開刀醫師來評估和指示。有些藥物在手術前是需要繼續服用的，有些則必須暫停，以免影響麻醉或手術的安全性。請您務必將所有正在服用的藥物告知您的醫療團隊，他們會給您最適合的建議。若有個別病況，請與您的麻醉醫師討論。"},
+  {cat:"術前準備與禁食", q:"有打瘦瘦針要怎麼禁食", a:"您好！「瘦瘦針」這類藥物可能會減緩腸胃蠕動，讓食物在胃裡停留的時間比較長。這表示即使您遵循一般麻醉前的禁食時間（固體食物6-8小時，清流質2小時），胃裡仍可能殘留食物，增加麻醉時發生嘔吐或吸入性肺炎的風險。因此，麻醉醫師可能會需要為您調整更長的禁食時間，或採取其他預防措施。請務必在麻醉前評估時，詳細告知麻醉醫師您使用的瘦瘦針種類、劑量以及最後一次施打的時間。若有個別病況，請與您的麻醉醫師討論。"},
+  // ── 類別三：用藥史與慢性病 ──
+  {cat:"用藥史與慢性病", q:"我有吃Bokey（伯基）", a:"您好！Bokey（伯基）是一種抗凝血的藥物。如果您有在服用抗凝血藥物，這在麻醉前是很重要的資訊，因為這類藥物可能會影響手術中的凝血功能，增加出血風險。服用Bokey是否需要停藥，需要您的麻醉醫師或手術醫師進行評估，他們會根據您的手術類型、身體狀況以及服用Bokey的原因來決定最佳的處理方式。請務必在術前門診或麻醉訪視時，主動告知您的醫師。若有個別病況，請與您的麻醉醫師討論。"},
+  {cat:"用藥史與慢性病", q:"我還有吃釋多糖?", a:"您好！「釋多糖」通常是糖尿病患者會服用的藥物。如果您有糖尿病，並且正在服用釋多糖，請務必在術前告知您的麻醉醫師或手術醫師。糖尿病患者在麻醉前需要良好控制血糖，醫師會評估您的狀況，並給予您關於術前是否繼續服用此藥的具體指示。若有個別病況，請與您的麻醉醫師討論。"},
+  {cat:"用藥史與慢性病", q:"我有洗腎麻醉要注意什麼?", a:"您好！對於洗腎的病人，由於腎臟功能受影響，麻醉醫師會特別注意：藥物選擇與劑量（會選擇對腎臟負擔較小的藥物，避免藥物在體內累積）、水分與電解質平衡（密切監測體液狀況和電解質）、洗腎時間（有時會建議在手術前一天或當天先洗腎，以確保身體狀態最佳）。麻醉醫師會根據您的洗腎情況和整體健康狀況，制定最安全的麻醉計畫。若有個別病況，請與您的麻醉醫師討論。"},
+  {cat:"用藥史與慢性病", q:"我有心律不整麻醉風險會不會比較高?", a:"您好！若您有心律不整，麻醉醫師會特別謹慎評估您的狀況，並與您的心臟科醫師討論。他們會選擇最適合您的麻醉方式和藥物，並在手術全程密切監測您的心跳和生命徵象，以確保您的安全。若有個別病況，請與您的麻醉醫師討論。"},
+  {cat:"用藥史與慢性病", q:"我有氣喘麻醉時插管可以嗎？", a:"您好！氣喘是一種呼吸道疾病，麻醉時進行氣管插管，確實有可能會刺激到呼吸道，進而引發氣喘反應。但請您放心，麻醉醫師在術前評估時，會非常仔細地了解您的氣喘病史、嚴重程度以及目前控制的狀況，並根據這些資訊選擇最適合您的麻醉方式和藥物，以減少呼吸道刺激，並準備好處理可能發生的氣喘反應。務必在術前告知麻醉醫師您的氣喘病史與用藥情況。若有個別病況，請與您的麻醉醫師討論。"},
+  {cat:"用藥史與慢性病", q:"蠶豆症可以全身麻醉嗎?", a:"您好！蠶豆症（G6PD缺乏症）是一種重要的體質狀況，麻醉醫師在術前評估時一定會特別注意。您需要告知麻醉醫師您有蠶豆症，他們會仔細選擇麻醉藥物（避免使用可能誘發溶血反應的藥物），並密切監測您的狀況，確保麻醉過程的安全性。請您務必在麻醉前告知醫療團隊您有蠶豆症，他們會為您制定最安全的麻醉計畫。若有個別病況，請與您的麻醉醫師討論。"},
+  {cat:"用藥史與慢性病", q:"我有喝酒的習慣，麻醉後都還有感覺", a:"您好！有喝酒習慣的朋友，身體對某些藥物的反應可能會和一般人不太一樣。這可能會影響麻醉藥物的代謝速度，或需要較高的劑量才能達到預期的麻醉深度。請務必在麻醉前告知您的麻醉醫師您的飲酒習慣。麻醉醫師會根據您的狀況，為您調整麻醉計畫，確保您的舒適與安全。若有個別病況，請與您的麻醉醫師討論。"},
+  {cat:"用藥史與慢性病", q:"我有在吃血壓藥跟糖尿病藥，早上空腹時到底要不要吃？", a:"您好！這是非常重要的問題。降血壓藥：通常在手術當天早上，大部分的降血壓藥會建議搭配少量開水繼續服用，以維持血壓穩定。糖尿病藥：因為手術前需要禁食，糖尿病藥物（包括口服藥和胰島素）的服用方式通常需要調整或暫停，以避免在空腹時發生低血糖。最關鍵的是，請您務必在麻醉前評估時，與您的麻醉醫師或開刀醫師確認，他們會給您最精確、最適合您個人狀況的指示。若有個別病況，請與您的麻醉醫師討論。"},
+  {cat:"用藥史與慢性病", q:"我平常有在吃魚油跟銀杏，跟手術會有關係嗎", a:"您好！魚油和銀杏都有影響血液凝固的特性，可能會增加手術中出血的風險。因此，在手術前，醫師通常會建議暫停服用這類可能影響凝血功能的保健食品。但每個人情況不同，停藥的時間點也需要專業評估。請您務必告知您的麻醉醫師或手術醫師，他們會給您最安全的建議。若有個別病況，請與您的麻醉醫師討論。"},
+  {cat:"用藥史與慢性病", q:"我這幾天常喝酒，會影響麻醉嗎？", a:"您好！酒精會影響身體對麻醉藥物的反應，可能需要調整麻醉藥物的劑量，也可能增加術後噁心、嘔吐或肝臟代謝的負擔。如果平常有大量飲酒習慣，突然停止飲酒也可能在術中或術後出現戒斷症狀。因此，請您務必在麻醉前評估時，誠實告知您的麻醉醫師近期的飲酒狀況，讓他們能為您做最完善的麻醉計畫。若有個別病況，請與您的麻醉醫師討論。"},
+  {cat:"用藥史與慢性病", q:"我最近有點小感冒、流鼻水或咳嗽，這樣還可以開刀做全身麻醉嗎？", a:"您好！即使是輕微的流鼻水或咳嗽，也可能增加麻醉期間和術後呼吸道的風險，例如術中咳嗽、喉痙攣、支氣管痙攣或術後肺部併發症。麻醉醫師會根據您的感冒症狀輕重、手術的急迫性以及您的整體健康狀況，來仔細評估是否適合進行手術。有時為了您的安全，可能會建議將手術延後，直到感冒痊癒。請您務必在術前盡快告知您的麻醉醫師。若有個別病況，請與您的麻醉醫師討論。"},
+  {cat:"用藥史與慢性病", q:"我有長期吃安眠藥的習慣，這會不會讓我開刀時麻不倒，或者醒不來？", a:"您好！長期服用安眠藥可能會讓您的身體對某些麻醉藥物產生耐受性，麻醉醫師可能需要調整麻醉藥的劑量，以確保您能順利進入無意識狀態。麻醉醫師在術前評估時，會詳細詢問您的用藥史，並根據您的狀況制定最安全的麻醉計畫，「麻不倒」的情況是極少發生的，請您不用擔心。至於「醒不來」，現代麻醉技術非常安全，麻醉醫師會全程監測您的生命徵象和麻醉深度，並在手術結束後安全地讓您甦醒。請務必在術前告知您的麻醉醫師您長期服用安眠藥的習慣和藥物種類。若有個別病況，請與您的麻醉醫師討論。"},
+  // ── 類別四：手術中安全與意識 ──
+  {cat:"手術中安全與意識", q:"麻醉危險嗎？會不會醒不過來", a:"您好，現代麻醉已發展得相當安全，雖然任何醫療行為都有其風險，但麻醉團隊會全程嚴密監測您的生命徵象，並隨時應對各種情況。關於您擔心「醒不過來」的情況，這是極為少數的案例，通常病人都能在手術結束後安全甦醒。麻醉醫師會根據您的身體狀況，選擇最適合您的麻醉方式，並確保您的安全。若有個別病況，請與您的麻醉醫師討論。"},
+  {cat:"手術中安全與意識", q:"想知道在麻醉時，這些藥物在身上有什麼風險？", a:"您好！關於藥物可能帶來的風險，主要包含：過敏反應（雖少見，但麻醉藥物仍有可能引起過敏，麻醉團隊會立即處理）、惡性高熱（罕見但嚴重的麻醉反應）、生理功能影響（麻醉藥物會暫時抑制呼吸，並可能影響心跳和血壓，麻醉中會持續監測）、術後不適（如喉嚨痛、噁心、發抖等，這些通常是暫時的）。麻醉醫師會根據您的身體狀況和手術需求，選擇最適合您的藥物組合，並全程監測。若有個別病況，請與您的麻醉醫師討論。"},
+  {cat:"手術中安全與意識", q:"麻醉完，我會醒嗎？", a:"您好！現代麻醉技術非常進步，麻醉藥物會隨著時間在體內代謝，麻醉醫師會精準控制藥量，並全程監測您的生命徵象。當手術結束，藥物作用減退後，您會被引導逐漸甦醒。麻醉團隊會一直在您身邊，直到您完全清醒並穩定下來，才會將您送往恢復室或病房。若有個別病況，請與您的麻醉醫師討論。"},
+  {cat:"手術中安全與意識", q:"麻醉醒來會不會難受?", a:"您好！麻醉醒來後，確實可能會有一些暫時性的不適感，常見的包括：喉嚨痛（可能因氣管內管刺激造成，通常會逐漸緩解）、噁心或嘔吐（這是麻醉藥物的副作用，麻醉醫師可使用止吐藥幫助您）、發抖（可能因體溫下降，醫護人員會使用保溫設備）、疲倦或口乾（藥物尚未完全代謝的正常現象）、頭暈或頭痛（特別是脊椎麻醉後）。這些不適感通常是暫時的，醫護人員會在恢復室密切觀察您。若有個別病況，請與您的麻醉醫師討論。"},
+  {cat:"手術中安全與意識", q:"我麻醉時手術會不會有感覺?", a:"您好！麻醉醫師在整個手術過程中都會持續監測您的生命徵象和麻醉深度，確保您處於無意識、無痛覺的狀態。也會使用專業設備（例如麻醉深度監測BIS）來精準調整麻醉藥量，避免您在手術中有任何感覺。請您相信專業的麻醉團隊會全程守護您的安全與舒適。若有個別病況，請與您的麻醉醫師討論。"},
+  {cat:"手術中安全與意識", q:"我會不會手術開到一半，突然醒過來？", a:"您好！在全身麻醉過程中，麻醉醫師會全程專注地監測您的生命徵象，並透過精密的儀器（如BIS麻醉深度監測儀）來評估您的大腦活性，確保麻醉藥物劑量維持在最適當的深度。我們的目標是讓您在手術中保持無意識、無痛覺的狀態，不會感受到疼痛，也不會記得手術過程。麻醉醫師會持續調整藥物，讓您在手術期間安全且舒適地睡著，不會突然醒來。若有個別病況，請與您的麻醉醫師討論。"},
+  // ── 類別五：插管與呼吸道管理 ──
+  {cat:"插管與呼吸道管理", q:"什麼是「插管」？甚麼時候被插管？喉嚨會不會受傷？", a:"您好！「插管」是指將管子放入氣管協助呼吸，確保呼吸道通暢並提供氧氣。在全身麻醉時，為了確保您在手術期間呼吸順暢並獲得足夠氧氣，麻醉醫師會將一根特製的氣管內管暫時放入您的氣管。至於喉嚨，插管後可能會感到暫時性的喉嚨不適或疼痛，這是因氣管內管刺激造成，通常會在幾天內自行緩解。請您放心，這是為了確保您麻醉中的呼吸安全。若有個別病況，請與您的麻醉醫師討論。"},
+  {cat:"插管與呼吸道管理", q:"網路說喉頭罩呼吸是什麼?", a:"您好！「喉頭罩」是一種特殊的呼吸道輔助工具，像一個小面罩，由麻醉醫師在您睡著後，輕輕地放置在喉部上方，而不是像氣管插管那樣進入氣管裡面。它能確保呼吸道暢通，避免舌頭或周圍組織阻塞呼吸道，並提供氧氣和輔助呼吸。相比於氣管插管，喉頭罩通常對喉嚨的刺激較小，有時能減少術後喉嚨不適的機會。若有個別病況，請與您的麻醉醫師討論。"},
+  {cat:"插管與呼吸道管理", q:"那全身插管麻醉跟喉頭面罩麻醉一樣嗎", a:"您好！這兩個是不一樣的。全身麻醉是一種狀態，讓您進入無意識、無痛覺。全身插管麻醉是指麻醉醫師將一根管子直接放入您的氣管中，是最穩固的呼吸道支持方式；喉頭面罩麻醉則是將喉頭面罩放置在您的喉嚨上方，覆蓋聲門。兩者都是全身麻醉時的呼吸道管理方法，但使用的工具和方式是不同的。若有個別病況，請與您的麻醉醫師討論。"},
+  {cat:"插管與呼吸道管理", q:"我有裝假牙、牙齒有點動搖，全身麻醉插管時會不會把我的牙齒弄斷？", a:"您好！在全身麻醉進行氣管插管時，麻醉醫師會非常小心謹慎，盡力避免對牙齒造成損傷。如果您有假牙、牙齒動搖、牙冠、牙橋等情況，請您務必在麻醉前評估時，主動告知麻醉醫師。這樣麻醉醫師就能事先了解您的口腔狀況，並採取更合適的插管方式或使用特別的工具，以最大程度地保護您的牙齒。若有個別病況，請與您的麻醉醫師討論。"},
+  {cat:"插管與呼吸道管理", q:"為什麼全身麻醉醒來後，喉嚨會非常痛、聲音沙啞？", a:"您好！當您接受全身麻醉時，為了確保手術中呼吸道暢通並提供足夠的氧氣，麻醉醫師會暫時將一根「氣管內管」放入您的氣管。這根管子在放置和移除的過程中，可能會對喉嚨、聲帶造成輕微的刺激或摩擦，進而導致術後喉嚨疼痛或聲音沙啞。這是一種常見的術後反應，通常會在幾天內隨著時間逐漸緩解。若有個別病況，請與您的麻醉醫師討論。"},
+  // ── 類別六：術後不適與恢復 ──
+  {cat:"術後不適與恢復", q:"我有什麼風險?", a:"您好！任何醫療行為都會有風險，但現代麻醉已相當安全。常見的麻醉風險可能包括：術後喉嚨痛（因氣管內管刺激）、噁心嘔吐、頭暈疲倦、體溫下降導致發抖。較少見但較嚴重的風險可能包括：麻醉藥物過敏、呼吸或心血管系統的變化，以及極少數情況下更嚴重的併發症。麻醉醫師會根據您的身體狀況，詳細評估並告知您個別的風險。若有個別病況，請與您的麻醉醫師討論。"},
+  {cat:"術後不適與恢復", q:"上次手術後頭很暈 怎麼辦?", a:"您好！麻醉後會感到頭暈，通常是因為血壓或藥物影響所造成的，這是麻醉後常見的副作用之一，通常會隨著時間和藥物代謝而逐漸改善。建議您在術前評估時，務必將上次手術後頭暈的經驗告知您的麻醉醫師，這樣他們可以針對您的情況，在麻醉方式和術後照護上做更完善的準備。若有個別病況，請與您的麻醉醫師討論。"},
+  {cat:"術後不適與恢復", q:"麻醉後不舒服", a:"您好，麻醉後常見的不適有：喉嚨痛（可能因為氣管內管的刺激）、噁心或嘔吐（麻醉藥的常見副作用）、身體發抖（可能是體溫暫時下降所引起）、感到疲倦或頭暈（麻醉藥物尚未完全代謝的正常現象）。這些都是麻醉後常見的反應，醫護人員會密切觀察您的狀況，並給予適當的處理來減輕您的不適。若有個別病況，請與您的麻醉醫師討論。"},
+  {cat:"術後不適與恢復", q:"為什麼上次開完刀，別人都說我會亂說話?", a:"您好！麻醉醒來後，有時候因為麻醉藥物尚未完全代謝，或身體還在適應，部分病人會出現暫時性的意識模糊、說話語無倫次，甚至短期記憶力受影響的情況。這通常是暫時性的，隨著藥物代謝會慢慢恢復正常，請您不用太擔心。若有個別病況，請與您的麻醉醫師討論。"},
+  {cat:"術後不適與恢復", q:"為什麼開完刀醒來，身體會一直發抖、覺得冷？", a:"您好！在手術過程中，由於手術室環境、麻醉藥物的影響以及身體暴露等因素，您的體溫可能會稍微下降。當麻醉藥物作用逐漸消退，身體開始恢復意識時，大腦會啟動保護機制來升高體溫，這時就可能出現發抖的現象，讓您感到寒冷。麻醉團隊在手術中會持續監測您的體溫，並會使用保溫設備來維持您的體溫，以減少術後發抖和不適感。若有個別病況，請與您的麻醉醫師討論。"},
+  {cat:"術後不適與恢復", q:"開刀醒來，大概要過多久才可以開始喝水或吃東西？", a:"您好！通常在全身麻醉清醒後，麻醉醫師或護理師會評估您的狀況，包括確認您是否完全清醒、噁心感是否嚴重，以及吞嚥功能是否正常。如果一切評估良好，通常會先讓您從少量飲水開始，確認沒有嗆咳或不適後，再逐步進食清淡的食物。詳細的進食時間會依您的手術種類、麻醉方式以及恢復狀況而定，請務必遵循您的醫療團隊的指示。若有個別病況，請與您的麻醉醫師討論。"},
+  // ── 類別七：自費項目說明 ──
+  {cat:"自費項目說明", q:"我想知道自費止痛的好處?", a:"您好！自費止痛通常會提供更積極、個人化的疼痛管理方式，其中「病人自控止痛裝置（PCA）」是常見的選擇。主要好處包括：疼痛控制更有效即時（您可以根據自己的疼痛程度，主動控制止痛藥劑量，疼痛感能更快地被緩解）、提升術後舒適度（有效的止痛能減少不適，讓您有更好的休息品質）、有助於加速恢復（疼痛減輕後，您會比較願意下床活動、深呼吸及咳嗽，有助於預防肺部併發症，促進身體更快康復）。若有個別病況，請與您的麻醉醫師討論。"},
+  {cat:"自費項目說明", q:"那我開腹腔鏡，需要嗎?", a:"您好！腹腔鏡手術雖然傷口較小，但術後仍可能會有疼痛感，特別是腹部脹氣（因手術中灌入的氣體）或傷口部位的疼痛。即使是腹腔鏡手術，自費止痛（如PCA）一樣能提供很好的幫助：有效緩解疼痛、促進早期活動（對腸胃蠕動和整體恢復都很有幫助）、提升整體舒適度。是否需要自費止痛，您可以根據自己對疼痛的耐受度，以及與麻醉醫師討論後再做決定。若有個別病況，請與您的麻醉醫師討論。"},
+  {cat:"自費項目說明", q:"那得術泰呢?", a:"您好！Dynastat（得術泰）是一種非類固醇消炎止痛藥，常用於術後疼痛的緩解。它主要透過抑制發炎反應來達到止痛的效果，通常以針劑方式給予。選擇使用Dynastat或其他止痛方式，麻醉醫師會根據您的手術類型、疼痛程度、身體狀況以及是否有其他藥物過敏史等因素來綜合評估，為您選擇最適合的止痛方案。若有個別病況，請與您的麻醉醫師討論。"},
+  {cat:"自費項目說明", q:"得術泰自費多少?", a:"根據知識庫資料，「得術泰Dynastat」是一種靜脈注射長效型消炎止痛針，止痛效果約可持續6–12小時，費用為700元。它屬於第一代及長效型非類固醇止痛藥，腸胃道出血機率較其他消炎藥低。這類藥物適用於18歲以上患者，若有消炎藥過敏史者則不建議使用。實際使用哪種藥物、費用以及是否適合，仍需由您的麻醉醫師評估後決定。若有個別病況，請與您的麻醉醫師討論。"},
+  {cat:"自費項目說明", q:"醫院會不會故意要我改自費麻醉藥？", a:"您好！醫院在麻醉藥物的選擇上，主要會依據病人的身體狀況、手術需求以及安全性來評估。一般來說，健保給付的麻醉藥物都是安全且有效的。如果麻醉醫師向您說明自費選項，通常是因為這些藥物可能提供額外的好處，例如更快速的術後恢復、減少噁心嘔吐等副作用、更精準的止痛效果，都是為了提升病患的舒適度和恢復品質。醫師會詳細解釋各種藥物的優缺點，讓您充分了解後，自行決定是否選用。若有個別病況，請與您的麻醉醫師討論。"},
+  {cat:"自費項目說明", q:"如果我沒有錢買自費止痛，怎麼辦？", a:"您好！請您放心，即使沒有選擇自費止痛，醫院也會提供健保給付的標準止痛藥物，以減輕您的術後疼痛。術後止痛是醫療照護的重要環節，麻醉醫師和護理師會評估您的疼痛狀況，並給予適當的止痛處理。自費止痛選項是為了提供更快速、更個人化或更全面的止痛效果，讓您在術後恢復期間更舒適，但這並非唯一的止痛方式。若有個別病況，請與您的麻醉醫師討論。"},
+  {cat:"自費項目說明", q:"自費止痛可以開完刀再決定嗎?因為我怎麼知道到底有多痛", a:"您好！一般來說，有些自費止痛方式（特別是神經阻斷術或PCA裝置的設置），會建議在手術前或手術剛結束時就準備好，因為這樣能更及時、有效地控制疼痛，達到預防性止痛的效果。不過，即使您在術後才決定加強止痛，麻醉團隊仍會根據您的需求，評估並提供最適合的止痛方案。建議您可以在術前與麻醉醫師討論您的疑慮，他們會說明術後可能的疼痛程度，並建議最佳的止痛策略。若有個別病況，請與您的麻醉醫師討論。"},
+  {cat:"自費項目說明", q:"自控式止痛內嗎啡會不會有成癮的問題?", a:"您好！自控式止痛（PCA）主要用於手術後急性疼痛的控制，這段時間通常是短暫的。麻醉醫師會根據您的體重、疼痛程度和身體狀況，設定安全的劑量與給藥限制，讓您在需要時能即時緩解疼痛，但又不會過量。在醫護人員的專業監控下，短期使用嗎啡類止痛藥來處理術後疼痛，成癮的風險是非常低的，您可以放心。若有個別病況，請與您的麻醉醫師討論。"},
+  {cat:"自費項目說明", q:"一定要買保溫毯嗎？", a:"您好！拋棄式溫毯被套是一種自費項目，費用為1000元。它的作用是運用不織布反熱救急溫毯墊，於手術全程安全使用熱空氣保暖維持病人體溫恆溫，降低術中低體溫的風險，提高舒適度及麻醉安全性。因此，它是一個可以增進舒適度和安全性的選擇，但並非強制性。您的麻醉醫師會根據您的個人狀況、手術類型和時間長短來評估是否有特別需要使用。若有個別病況，請與您的麻醉醫師討論。"},
+  {cat:"自費項目說明", q:"如果我沒有預算買自費保溫毯，醫院會讓我冷到感冒嗎？", a:"您好！醫院在手術過程中，一定會提供標準的保暖措施，例如使用一般保暖毯、輸注溫熱的點滴，並維持手術室的溫度，以避免病人體溫過低。麻醉團隊也會全程監測您的體溫。自費的拋棄式溫毯被套是為了提供更進一步的舒適度和更精準的體溫維持，進一步降低低體溫的風險。即使您沒有選擇自費項目，醫院的標準保暖措施也會盡力確保您的安全與舒適，不會讓您因為沒有自費項目而「冷到感冒」。若有個別病況，請與您的麻醉醫師討論。"},
+  // ── 類別八：特殊族群 ──
+  {cat:"特殊族群", q:"孕婦可以全身麻醉嗎？", a:"您好！孕婦在特定醫療需求下是可以接受全身麻醉的。麻醉醫師會與您的婦產科醫師共同評估，選擇對您和胎兒最安全的麻醉藥物和方式。他們會密切監測您的生命徵象以及胎兒的狀況，盡力將風險降到最低。若有個別病況，請與您的麻醉醫師及婦產科醫師討論。"},
+  {cat:"特殊族群", q:"孕婦可以麻醉嗎？", a:"您好！剖腹產常用「脊椎麻醉」或「硬膜外麻醉」這兩種區域麻醉方式；自然產也可以使用「減痛分娩」來減輕疼痛。麻醉對胎兒的影響通常是安全的，醫療團隊會選擇最適合媽媽和寶寶的麻醉方式。孕婦在需要時是可以接受麻醉的，麻醉醫師會根據您的狀況、手術需求和胎兒的情況，評估並選擇最安全、最適合的麻醉方式。若有個別病況，請與您的麻醉醫師進一步討論。"},
+  {cat:"特殊族群", q:"懷孕三週要開刀，麻醉會有危險嗎？", a:"您好！懷孕初期是胎兒發育敏感期，麻醉醫師會謹慎評估，選用對胎兒影響最小的藥物與方式，確保您與寶寶安全。請務必告知您的醫療團隊懷孕狀況。若有個別病況，請與您的麻醉醫師討論。"},
+  {cat:"特殊族群", q:"胎兒會不會因為這樣畸形", a:"您好！現代麻醉技術和藥物在懷孕期間使用時，通常是安全的。麻醉醫師會特別選擇對胎兒影響最小的藥物，並密切監測您的狀況，以確保您和寶寶的安全。您的麻醉醫師和婦產科醫師會綜合評估手術的必要性、您的懷孕週數以及所使用的麻醉方式，盡力將風險降到最低。若有個別病況，請與您的麻醉醫師及婦產科醫師討論。"},
+  {cat:"特殊族群", q:"新生兒出生後要開心手術，要怎麼麻醉比較好？", a:"您好！新生兒開心手術是非常複雜且需要高度專業的醫療照護。對於新生兒的心臟手術，麻醉醫師會是專精於兒童麻醉的醫師，他們會根據寶寶的具體狀況、心臟問題的複雜程度以及手術的類型，量身訂製最安全、最適合的麻醉計畫。這會涉及非常精密的藥物選擇、劑量控制和生命徵象監測。請務必與負責您寶寶的麻醉醫師和心臟外科團隊詳細討論。"},
+  {cat:"特殊族群", q:"兒童疝氣手術麻醉後會有哪些不舒服", a:"您好！兒童疝氣手術後，麻醉清醒時可能會有些不舒服，這是常見的反應，醫療團隊會密切觀察並處理。常見狀況可能包括：喉嚨不適（可能因氣管內管刺激，造成喉嚨痛或聲音沙啞）、噁心嘔吐（部分小朋友對麻醉藥較敏感，醫師會視情況給止吐藥）、疲倦想睡（麻醉藥物需要時間代謝）、發抖（術後體溫可能下降，護理師會協助保暖）、手術部位疼痛（這是手術本身造成，會提供適當止痛藥）。若有個別病況，請與您的麻醉醫師討論。"},
+  // ── 類別九：其他 ──
+  {cat:"其他", q:"我沒保險", a:"您好，我了解您可能對於醫療費用有所考量。我是麻醉科的衛教助理，主要負責提供麻醉相關的醫療資訊。關於您沒有保險，以及醫療費用、付款方式等問題，建議您直接諮詢本院的批價櫃檯或社會服務室。他們會很樂意為您提供詳細的協助與說明。"},
+  {cat:"其他", q:"想瞭解ERAS", a:"您好，ERAS的全名是「術後加速康復療程」（Enhanced Recovery After Surgery）。這是一種整合性的照護模式，目標是透過在手術前、中、後各階段的優化管理，幫助病人更快地恢復健康。它可能包括術前衛教、縮短禁食時間、多模式止痛、早期下床活動等措施，能減少併發症，讓您更早回到日常生活。若有個別病況，請與您的麻醉醫師討論。"},
+  {cat:"其他", q:"貴院有ERAS嗎?", a:"您好，ERAS是一種先進的術後照護模式，許多醫院都有在推動。關於本院（衛生福利部彰化醫院）是否有提供ERAS服務，以及您是否適用，這需要根據您的手術種類和實際狀況來評估。建議您直接向您的主治醫師或麻醉醫師諮詢，他們會為您說明本院的相關措施與安排。"},
+  {cat:"其他", q:"什麼是肌張力監測", a:"您好，肌張力監測（全名為「最適肌張力神經肌肉監測」）是一種在手術中使用的技術。它的目的是讓麻醉醫師能用最少的藥量，達到最理想的肌肉放鬆狀態，增加手術的安全性。術後，它能幫助您更快地恢復肌肉力量，降低呼吸道風險，減少再次插管的可能性，並加速整體恢復。這項自費項目約為5500元。若有個別病況，請與您的麻醉醫師討論。"},
+  {cat:"其他", q:"我有做光療", a:"您好！謝謝您告知有做「光療」。在麻醉過程中，我們需要使用血氧監測器來持續監測您的血氧濃度，這個儀器通常會夾在手指上。光療指甲油可能會影響儀器的準確度，因此建議您至少移除一根手指（通常是食指）的光療指甲，以便麻醉團隊能更精準地監測您的血氧狀況，確保您的安全。請在術前告知您的護理師或麻醉醫師。若有個別病況，請與您的麻醉醫師討論。"},
+  {cat:"其他", q:"我有接睫毛，進手術室前需要卸除嗎？", a:"您好！接睫毛雖然通常不會直接影響麻醉或手術，但為了避免在手術過程中可能造成的眼睛刺激、感染風險，或在極少數情況下可能與醫療設備產生干擾，有些醫院可能會建議卸除。最保險的做法是，請您在術前向您的麻醉醫師或護理師確認，他們會給您最明確的指示。若有個別病況，請與您的麻醉醫師討論。"}
+];
+
+
+const REASONS = ["醫療資訊不正確","臨床適切性不足","內容不完整","表達不易理解","安全性疑慮","與主題無關","其他意見"];
+const scores = {};
+
+// ─── 建立題目 ───
+function build() {
+  const list = document.getElementById('qlist');
+  let lastCat = '';
+  QA.forEach((item, i) => {
+    const id = i + 1;
+    // 類別標題
+    if (item.cat !== lastCat) {
+      lastCat = item.cat;
+      const catEl = document.createElement('div');
+      catEl.className = 'cat-header';
+      catEl.textContent = item.cat;
+      list.appendChild(catEl);
+    }
+    const preview = item.a.length > 220 ? item.a.slice(0, 220) + '…' : item.a;
+    const d = document.createElement('div');
+    d.className = 'card'; d.id = 'card-' + id;
+    d.innerHTML = `
+      <div class="cnum">題目 ${id} / ${QA.length} <span class="cat-badge">${item.cat}</span> <span class="req-badge">必填</span></div>
+      <div class="cq"><span class="cq-icon">&#9658;</span>${item.q}</div>
+      <div class="ca">${preview}</div>
+      <div class="rbts">
+        ${[4,3,2,1].map(s => `
+          <button class="rb" id="b${id}-${s}" onclick="rate(${id},${s})">
+            <span class="sc">${s} 分</span>
+            <span class="sl">${s===4?'非常適切':s===3?'適切修正':s===2?'不適切':'極不適切'}</span>
+          </button>`).join('')}
+      </div>
+      <div class="err-msg" id="em-${id}">&#9888; 此題為必填，請選擇評分</div>
+      <div class="rbox" id="rbox-${id}">
+        <div class="reason-section" id="rsec-${id}" style="display:none">
+          <div class="rlbl" id="rlbl-${id}">&#9651; 請選擇問題原因（可複選）</div>
+          <select class="rsel" onchange="addReason(${id},this)">
+            <option value="">— 選擇原因 —</option>
+            ${REASONS.map(r => `<option value="${r}">${r}</option>`).join('')}
+          </select>
+        </div>
+        <div class="suggest-lbl" id="slbl-${id}">&#9998; 若有具體修正方向，歡迎補充說明（選填）</div>
+        <textarea class="cmt" id="cmt-${id}" placeholder="請填寫具體修正建議…" rows="2"></textarea>
+      </div>`;
+    list.appendChild(d);
+  });
+}
+
+function rate(id, s) {
+  scores[id] = scores[id] || {score: null, reasons: []};
+  scores[id].score = s;
+  [1,2,3,4].forEach(v => {
+    document.getElementById('b'+id+'-'+v).className = 'rb' + (v===s ? ' a'+v : '');
+  });
+  const card = document.getElementById('card-'+id);
+  card.className = 'card scored' + (s <= 2 ? ' flagged' : (s === 3 ? ' soft-flag' : ''));
+  // Show/hide reason section: only for score 1 or 2
+  const rsec = document.getElementById('rsec-'+id);
+  const slbl = document.getElementById('slbl-'+id);
+  if (rsec) rsec.style.display = (s <= 2) ? 'block' : 'none';
+  if (slbl) slbl.style.display = (s <= 3) ? 'block' : 'none';
+  document.getElementById('em-'+id).className = 'err-msg';
+  document.getElementById('rbox-'+id).className = 'rbox' + (s <= 3 && s >= 1 ? ' on' : '');
+  if (s === 4) { scores[id].reasons = []; refreshTags(id); }
+  updateStats(); updateProg();
+  if (document.getElementById('val-top').className.includes('on')) validateAll(false);
+}
+
+function addReason(id, sel) {
+  const v = sel.value; if (!v) return;
+  scores[id] = scores[id] || {score: null, reasons: []};
+  if (!scores[id].reasons.includes(v)) scores[id].reasons.push(v);
+  sel.value = ''; refreshTags(id);
+}
+
+function refreshTags(id) {
+  const lbl = document.getElementById('rlbl-'+id);
+  const tags = (scores[id] && scores[id].reasons) || [];
+  if (tags.length === 0) {
+    lbl.textContent = '▽ 請選擇問題原因（可複選）';
+  } else {
+    lbl.innerHTML = '已選原因：' + tags.map(t =>
+      `<span class="rtag">${t}<span class="rtag-x" onclick="removeReason(${id},'${t}')">×</span></span>`
+    ).join('');
+  }
+}
+
+function removeReason(id, v) {
+  if (!scores[id]) return;
+  scores[id].reasons = scores[id].reasons.filter(r => r !== v);
+  refreshTags(id);
+}
+
+function updateProg() {
+  const done = Object.values(scores).filter(s => s && s.score !== null).length;
+  document.getElementById('pgb').style.width = Math.round(done / QA.length * 100) + '%';
+  document.getElementById('pgl').textContent = '已完成 ' + done + ' / ' + QA.length + ' 題（每題均為必填）';
+}
+
+function updateStats() {
+  const done = Object.values(scores).filter(s => s && s.score !== null);
+  const n = done.length;
+  document.getElementById('st').textContent = n;
+  if (n === 0) {
+    document.getElementById('scvi').textContent = '—';
+    document.getElementById('savg').textContent = '—';
+    document.getElementById('slow').textContent = 0;
+    return;
+  }
+  const app = done.filter(s => s.score >= 3).length;
+  document.getElementById('scvi').textContent = (app / n).toFixed(2);
+  document.getElementById('savg').textContent = (done.reduce((a, s) => a + s.score, 0) / n).toFixed(2);
+  document.getElementById('slow').textContent = done.filter(s => s.score <= 2).length;
+}
+
+function validateAll(scroll) {
+  let missing = [];
+  for (let i = 1; i <= QA.length; i++) {
+    const d = scores[i];
+    const card = document.getElementById('card-'+i);
+    const em = document.getElementById('em-'+i);
+    if (!d || d.score === null) {
+      missing.push(i);
+      if (!card.className.includes('err')) card.className += ' err';
+      em.className = 'err-msg on';
+    } else {
+      card.className = card.className.replace(' err', '');
+      em.className = 'err-msg';
+    }
+  }
+  const msg = missing.length > 0
+    ? `&#9888; 尚有 <b>${missing.length}</b> 題未評分（題號：${missing.slice(0,8).join('、')}${missing.length>8?'…':''}），請完成所有題目後再提交。`
+    : '';
+  ['val-top','val-bot'].forEach(id => {
+    const el = document.getElementById(id);
+    el.innerHTML = msg;
+    el.className = 'val-banner' + (missing.length > 0 ? ' on' : '');
+  });
+  if (missing.length > 0 && scroll) {
+    document.getElementById('card-'+missing[0]).scrollIntoView({behavior:'smooth', block:'center'});
+  }
+  return missing.length === 0;
+}
+
+function showToast(msg, type) {
+  const t = document.getElementById('toast');
+  t.innerHTML = msg; t.className = 'toast ' + type + ' show';
+  setTimeout(() => { t.className = 'toast ' + type; }, 3500);
+}
+
+async function submitAll() {
+  if (!document.getElementById('expert-id').value) {
+    showToast('請先選擇專家身份', 'ng'); return;
+  }
+  if (!validateAll(true)) return;
+
+  const btn = document.getElementById('submit-btn');
+  btn.disabled = true;
+  btn.textContent = '提交中，請稍候…';
+
+  const payload = {
+    expertId: document.getElementById('expert-id').value,
+    scores: [], reasons: [], comments: []
+  };
+  for (let i = 1; i <= QA.length; i++) {
+    const d = scores[i] || {};
+    payload.scores.push(d.score || '');
+    payload.reasons.push((d.reasons || []).join('；'));
+    payload.comments.push((document.getElementById('cmt-'+i)||{}).value || '');
+  }
+
+  try {
+    const res = await fetch(API_URL, {method:'POST', body: JSON.stringify(payload)});
+    const json = await res.json();
+    if (json.status === 'ok') {
+      document.getElementById('success-screen').className = 'success-screen on';
+      btn.textContent = '✓ 提交成功';
+      showToast('&#10003; 評鑑結果已成功提交！', 'ok');
+    } else {
+      throw new Error(json.msg || '未知錯誤');
+    }
+  } catch (err) {
+    showToast('提交失敗：' + err.message, 'ng');
+    btn.disabled = false;
+    btn.textContent = '✓　提交評鑑結果至 Google Sheets';
+  }
+}
+
+build();
+</script>
+</body>
+</html>
